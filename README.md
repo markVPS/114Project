@@ -73,20 +73,63 @@ The default `jobs.txt` was chosen to make the simulator visibly demonstrate:
 - scheduler selections under all three policies
 - state transitions and release of resources/memory
 
-## Suggested presentation explanation
+## General Explanation
 
 > This simulator does not create real OS processes. Instead, it models jobs as PCBs in a single-threaded user-space program. Each time step admits new jobs, tries memory allocation, dispatches one READY process to the CPU according to the selected scheduler, handles resource requests, and logs every state transition. Memory must be allocated before a process can enter READY, and a busy printer blocks jobs until it is released.
 
 ## Mermaid architecture diagram
 
 ```mermaid
-flowchart LR
-  A[Job Loader / Input] --> B[Simulation Engine]
-  B --> C[Scheduler]
-  B --> D[Memory Manager]
-  B --> E[Resource Manager]
-  B --> F[Logger / Output]
-  C --> G[Ready Queue / Policy Logic]
-  D --> H[Memory Model / Free List]
-  E --> I[Shared Resource Pool]
+flowchart TD
+  A([Start simulation<br/>main.cpp]) --> B["Load jobs into PCBs<br/>SimulationEngine.cpp"]
+  B --> C["Initialize scheduler, memory, resources<br/>SimulationEngine.cpp"]
+  C --> D["Advance simulation clock<br/>SimulationEngine.cpp"]
+
+  D --> E["Admit new jobs (arrival_time == t)<br/>SimulationEngine.cpp"]
+  E --> F["Attempt memory allocation<br/>MemoryManager.cpp"]
+
+  F --> G{"Enough memory available?<br/>MemoryManager.cpp"}
+  G -- Yes --> H["Allocate (first-fit)<br/>MemoryManager.cpp"]
+  H --> I["Move to READY queue<br/>Scheduler.cpp"]
+
+  G -- No --> J["Set state = WAITING_MEMORY<br/>Process.cpp"]
+
+  I --> K{"More jobs to process?<br/>SimulationEngine.cpp"}
+  J --> K
+  K -- Yes --> F
+  K -- No --> L{"CPU idle or preemption?<br/>Scheduler.cpp"}
+
+  L -- Yes --> M["Select next job (FCFS/RR/Priority)<br/>Scheduler.cpp"]
+  M --> N{"Job found?<br/>Scheduler.cpp"}
+  N -- No --> D
+  N -- Yes --> O["Set state = RUNNING<br/>Process.cpp"]
+
+  L -- No --> P["Continue running job<br/>SimulationEngine.cpp"]
+  O --> Q["Execute 1 CPU tick<br/>SimulationEngine.cpp"]
+  P --> Q
+
+  Q --> R{"Needs printer now?<br/>Process.cpp"}
+  R -- Yes --> S["Request resource<br/>ResourceManager.cpp"]
+  R -- No --> T["Continue execution<br/>SimulationEngine.cpp"]
+
+  S --> U{"Printer available?<br/>ResourceManager.cpp"}
+  U -- Yes --> V["Grant printer<br/>ResourceManager.cpp"]
+  U -- No --> W["Set WAITING_RESOURCE<br/>Process.cpp"]
+
+  V --> X{"Job finished?<br/>Process.cpp"}
+  T --> X
+  W --> D
+
+  X -- Yes --> Y["Release resources<br/>ResourceManager.cpp"]
+  Y --> Z["Free memory<br/>MemoryManager.cpp"]
+  Z --> ZA["Set TERMINATED<br/>Process.cpp"]
+  ZA --> ZB["Wake waiting jobs<br/>SimulationEngine.cpp"]
+  ZB --> D
+
+  X -- No --> ZC{"Preemption needed?<br/>Scheduler.cpp"}
+  ZC -- Yes --> ZD["Move to READY<br/>Scheduler.cpp"]
+  ZC -- No --> ZE["Keep RUNNING<br/>SimulationEngine.cpp"]
+
+  ZD --> D
+  ZE --> D
 ```
