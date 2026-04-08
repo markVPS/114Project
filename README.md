@@ -75,7 +75,7 @@ The default `jobs.txt` was chosen to make the simulator visibly demonstrate:
 
 ## General Explanation
 
-> This simulator does not create real OS processes. Instead, it models jobs as PCBs in a single-threaded user-space program. Each time step admits new jobs, tries memory allocation, dispatches one READY process to the CPU according to the selected scheduler, handles resource requests, and logs every state transition. Memory must be allocated before a process can enter READY, and a busy printer blocks jobs until it is released.
+> At each time step, the program checks for any new jobs and tries to give them memory. If there’s enough memory, the job moves to READY; otherwise it stays in a WAITING state. The scheduler then picks a job from the READY queue and sets it to RUNNING. While running, the job uses CPU time and may request a resource like the printer. If the printer is busy, the job is moved to WAITING until it becomes available again. When a job finishes, it goes to TERMINATED and releases its memory and any resources it was using. Throughout the whole process, the program logs state changes, scheduling decisions, and resource usage.
 
 ## Mermaid architecture diagram
 
