@@ -7,6 +7,8 @@
 #include <sstream>
 #include <vector>
 
+//loads job definitions from a file
+//includes process parameters and resource requests
 std::vector<PCB> loadJobs(const std::string& filename) {
     std::vector<PCB> jobs;
     std::ifstream file(filename);
@@ -56,7 +58,7 @@ int main(int argc, char* argv[]) {
         else if (arg == "--memory") memory = std::stoi(argv[++i]);
         else if (arg == "--jobs") jobsFile = argv[++i];
     }
-
+//loasds jobs form the file and starts the simulator
     Policy policy = parsePolicy(policyStr);
 
     std::vector<PCB> jobs = loadJobs(jobsFile);
