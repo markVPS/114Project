@@ -1,13 +1,18 @@
 #include "../include/Simulator.h"
 #include <iostream>
 
+//initializes the simulators w/a list of jobs, policy, quantum, and total memory
+// simulator manages scheduling, allocation/dealloaction, and resource management
 Simulator::Simulator(const std::vector<PCB>& jobs_, Policy policy, int quantum, int totalMemory)
     : jobs(jobs_), scheduler(policy, quantum), memoryManager(totalMemory) {}
 
+//prints a timestamp
 void Simulator::log(const std::string& message) {
     std::cout << "[t=" << currentTime << "] " << message << std::endl;
 }
-
+//check for new jobs that arrive at the current time
+//attempt to allocate memory, if succesful job state is changed to READY
+// otherwise job state is changed to WAITING  unitl memory is available
 void Simulator::admitNewJobs() {
     for (auto& job : jobs) {
         if (job.arrivalTime == currentTime && job.state == ProcessState::NEW) {
@@ -25,7 +30,9 @@ void Simulator::admitNewJobs() {
         }
     }
 }
-
+//allocate memory for the jobs in the WAITING state
+//re-checks if memory is available
+//if so, job state is READY, if not job is still WAITING
 void Simulator::tryAllocateWaitingMemory() {
     size_t count = waitingMemoryQueue.size();
 
@@ -44,7 +51,9 @@ void Simulator::tryAllocateWaitingMemory() {
         }
     }
 }
-
+//next process will run if no other process is currently running
+//process is chosen from the ready queue
+//resets the quantm counter and changes process state to RUNNING
 void Simulator::dispatchIfNeeded() {
     if (runningProcess == nullptr) {
         runningProcess = scheduler.selectProcess(readyQueue);
@@ -56,6 +65,9 @@ void Simulator::dispatchIfNeeded() {
         }
     }
 }
+//execute only one UPU tick for running process
+// decrement process's remaining time and increment its exected ticks
+//checks if any other resource requests are due at this specific tick
 
 void Simulator::executeOneTick() {
     if (!runningProcess) return;
@@ -96,6 +108,9 @@ void Simulator::executeOneTick() {
         runningProcess = nullptr;
     }
 }
+//checks if processes are holding resouces and decrements their hold timers
+// release the resouce when a resouce hold expries, then tries to grant the resouces
+// to a process in the waiting queue
 
 void Simulator::handleResourceReleases() {
     for (auto& job : jobs) {
@@ -141,6 +156,8 @@ void Simulator::handleResourceReleases() {
         }
     }
 }
+//checks if the running process has finished
+//if done, releases any resources it holds, frees irs memory, and changes state to TERMINATED
 
 void Simulator::checkTerminations() {
     if (runningProcess && runningProcess->remainingTime <= 0) {
@@ -156,7 +173,7 @@ void Simulator::checkTerminations() {
         runningProcess = nullptr;
     }
 }
-
+//will return true if all jobs are done
 bool Simulator::allFinished() const {
     for (const auto& job : jobs) {
         if (job.state != ProcessState::TERMINATED) {
@@ -165,6 +182,7 @@ bool Simulator::allFinished() const {
     }
     return true;
 }
+//the simultion loop basically
 
 void Simulator::run() {
     while (!allFinished()) {
