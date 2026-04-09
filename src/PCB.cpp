@@ -1,5 +1,6 @@
 #include "../include/PCB.h"
-
+//remaining time is decremented as process executes
+//PCB is able to track the requests/allocation of memory
 PCB::PCB(int pid_, int arrival_, int burst_, int memory_, int priority_)
     : pid(pid_),
       arrivalTime(arrival_),
@@ -9,6 +10,7 @@ PCB::PCB(int pid_, int arrival_, int burst_, int memory_, int priority_)
       priority(priority_),
       memorySize(memory_) {}
 
+// converts the enum value of a procees state to a string
 std::string stateToString(ProcessState state) {
     switch (state) {
         case ProcessState::NEW: return "NEW";
