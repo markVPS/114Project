@@ -1,31 +1,27 @@
 #include "../include/Simulator.h"
 #include <iostream>
 
-//initializes the simulators w/a list of jobs, policy, quantum, and total memory
-// simulator manages scheduling, allocation/dealloaction, and resource management
-Simulator::Simulator(const std::vector<PCB>& jobs_, Policy policy, int quantum, int totalMemory)
-    : jobs(jobs_), scheduler(policy, quantum), memoryManager(totalMemory) {}
 
-//prints a timestamp
-void Simulator::log(const std::string& message) {
+Simulator::Simulator(const std::vector<PCB>& jobs_, Policy policy, int quantum, int totalMemory) //initializes the simulators w/a list of jobs, policy, quantum, and total memory
+    : jobs(jobs_), scheduler(policy, quantum), memoryManager(totalMemory) {} // simulator manages scheduling, allocation/dealloaction, and resource management
+
+void Simulator::log(const std::string& message) { //prints a timestamp
     std::cout << "[t=" << currentTime << "] " << message << std::endl;
 }
-//check for new jobs that arrive at the current time
-//attempt to allocate memory, if succesful job state is changed to READY
-// otherwise job state is changed to WAITING  unitl memory is available
+
 void Simulator::admitNewJobs() {
     for (auto& job : jobs) {
-        if (job.arrivalTime == currentTime && job.state == ProcessState::NEW) {
+        if (job.arrivalTime == currentTime && job.state == ProcessState::NEW) { //check for new jobs that arrive at the current time
             int startAddr;
             if (memoryManager.allocate(job.memoryNeeded, startAddr)) {
                 job.memoryStart = startAddr;
                 job.state = ProcessState::READY;
                 readyQueue.push_back(&job);
-                log("PID " + std::to_string(job.pid) + " admitted, memory allocated at " + std::to_string(startAddr) + ", state=READY");
+                log("PID " + std::to_string(job.pid) + " admitted, memory allocated at " + std::to_string(startAddr) + ", state=READY"); //attempt to allocate memory, if succesful job state is changed to READY
             } else {
                 job.state = ProcessState::WAITING_MEMORY;
                 waitingMemoryQueue.push_back(&job);
-                log("PID " + std::to_string(job.pid) + " blocked for memory, state=WAITING_MEMORY");
+                log("PID " + std::to_string(job.pid) + " blocked for memory, state=WAITING_MEMORY"); // otherwise job state is changed to WAITING  unitl memory is available
             }
         }
     }
@@ -51,13 +47,11 @@ void Simulator::tryAllocateWaitingMemory() {
         }
     }
 }
-//next process will run if no other process is currently running
-//process is chosen from the ready queue
-//resets the quantm counter and changes process state to RUNNING
+
 void Simulator::dispatchIfNeeded() {
-    if (runningProcess == nullptr) {
-        runningProcess = scheduler.selectProcess(readyQueue);
-        currentQuantumUsed = 0;
+    if (runningProcess == nullptr) { //next process will run if no other process is currently running
+        runningProcess = scheduler.selectProcess(readyQueue); //process is chosen from the ready queue
+        currentQuantumUsed = 0; //resets the quantum counter and changes process state to RUNNING
 
         if (runningProcess) {
             runningProcess->state = ProcessState::RUNNING;

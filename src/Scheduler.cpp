@@ -1,8 +1,7 @@
 #include "../include/Scheduler.h"
 #include <stdexcept>
 
-//initializes the scheduler with a policy and quantum
-Scheduler::Scheduler(Policy policy, int quantum) : policy(policy), quantum(quantum) {}
+Scheduler::Scheduler(Policy policy, int quantum) : policy(policy), quantum(quantum) {} //initializes the scheduler with a policy and quantum
 
 //selects the next process that will run based on the scheduling process
 //removes the process from the ready queue
@@ -30,20 +29,19 @@ PCB* Scheduler::selectProcess(std::deque<PCB*>& readyQueue) {
 
     return nullptr;
 }
-//return the scheduling policy
-Policy Scheduler::getPolicy() const {
+
+Policy Scheduler::getPolicy() const { //return the scheduling policy
     return policy;
 }
-//return the time quantum 
-int Scheduler::getQuantum() const {
+
+int Scheduler::getQuantum() const { //return the time quantum 
     return quantum;
 }
 
-//parses a policy string into an enum
-// runtime error if the string doesnt match a known policy
-Policy parsePolicy(const std::string& policyStr) {
+
+Policy parsePolicy(const std::string& policyStr) { //parses a policy string into an enum
     if (policyStr == "FCFS") return Policy::FCFS;
     if (policyStr == "RR") return Policy::RR;
     if (policyStr == "PRIORITY") return Policy::PRIORITY;
-    throw std::runtime_error("Invalid policy");
+    throw std::runtime_error("Invalid policy"); // runtime error if the string doesnt match a known policy
 }
