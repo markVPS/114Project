@@ -23,6 +23,7 @@ private:
 
     PCB* runningProcess = nullptr;
     int currentQuantumUsed = 0;
+     bool dispatchedThisTick = false;
 
 public:
     Simulator(const std::vector<PCB>& jobs, Policy policy, int quantum, int totalMemory);

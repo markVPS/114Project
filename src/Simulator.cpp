@@ -1,6 +1,6 @@
 #include "../include/Simulator.h"
 #include <iostream>
-
+#include <chrono>
 
 Simulator::Simulator(const std::vector<PCB>& jobs_, Policy policy, int quantum, int totalMemory) //initializes the simulators w/a list of jobs, policy, quantum, and total memory
     : jobs(jobs_), scheduler(policy, quantum), memoryManager(totalMemory) {} // simulator manages scheduling, allocation/dealloaction, and resource management
@@ -49,22 +49,25 @@ void Simulator::tryAllocateWaitingMemory() {
 }
 
 void Simulator::dispatchIfNeeded() {
-    if (runningProcess == nullptr) { //next process will run if no other process is currently running
-        runningProcess = scheduler.selectProcess(readyQueue); //process is chosen from the ready queue
-        currentQuantumUsed = 0; //resets the quantum counter and changes process state to RUNNING
+    if (runningProcess == nullptr) {
+        runningProcess = scheduler.selectProcess(readyQueue);
+        currentQuantumUsed = 0;
 
         if (runningProcess) {
             runningProcess->state = ProcessState::RUNNING;
+            dispatchedThisTick = true;
             log("PID " + std::to_string(runningProcess->pid) + " dispatched, state=RUNNING");
         }
     }
 }
+
 //execute only one UPU tick for running process
 // decrement process's remaining time and increment its exected ticks
 //checks if any other resource requests are due at this specific tick
 
 void Simulator::executeOneTick() {
     if (!runningProcess) return;
+    if (dispatchedThisTick) return;
 
     runningProcess->remainingTime--;
     runningProcess->executedTicks++;
@@ -179,13 +182,24 @@ bool Simulator::allFinished() const {
 //the simultion loop basically
 
 void Simulator::run() {
-    while (!allFinished()) {
+auto startTime = std::chrono::high_resolution_clock::now(); 
+   while (!allFinished()) {
+auto now = std::chrono::high_resolution_clock::now();
+double elapsed = std::chrono::duration<double>(now - startTime).count();
+
+std::cout << "\n==============================" << std::endl;
+std::cout << "REAL TIME: " << elapsed << " seconds" << std::endl;
+std::cout << "CPU TICK: " << currentTime << std::endl;
+std::cout << "==============================" << std::endl;       
+ dispatchedThisTick = false;
+
         admitNewJobs();
         tryAllocateWaitingMemory();
         dispatchIfNeeded();
         executeOneTick();
         handleResourceReleases();
         checkTerminations();
+
         currentTime++;
     }
 
