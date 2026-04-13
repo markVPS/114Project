@@ -1,0 +1,22 @@
+36,44c36,46
+< [t=19] PID 3 executed one tick, remaining=0
+< [t=19] PID 3 terminated, memory freed
+< [t=20] PID 5 dispatched, state=RUNNING
+< [t=20] PID 5 executed one tick, remaining=4
+< [t=21] PID 5 executed one tick, remaining=3
+< [t=22] PID 5 executed one tick, remaining=2
+< [t=23] PID 5 executed one tick, remaining=1
+< [t=24] PID 5 executed one tick, remaining=0
+< [t=24] PID 5 terminated, memory freed
+---
+> [t=18] PID 3 quantum expired, returned to READY
+> [t=19] PID 5 dispatched, state=RUNNING
+> [t=19] PID 5 executed one tick, remaining=4
+> [t=20] PID 5 executed one tick, remaining=3
+> [t=21] PID 5 executed one tick, remaining=2
+> [t=22] PID 5 executed one tick, remaining=1
+> [t=23] PID 5 executed one tick, remaining=0
+> [t=23] PID 5 terminated, memory freed
+> [t=24] PID 3 dispatched, state=RUNNING
+> [t=24] PID 3 executed one tick, remaining=0
+> [t=24] PID 3 terminated, memory freed
