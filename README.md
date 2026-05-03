@@ -1,26 +1,33 @@
-# OS Simulation Project (C++)
+# MiniOS Printer Simulation Project (C++)
 
-This project is a user-space operating system simulator for an OS class. It models:
+This project is a user-space MiniOS simulator for CSCI 114. The topic is a printer/resource simulation. It demonstrates process states, CPU scheduling, memory blocking, shared resource blocking, synchronization rules, and structured event logs.
+
+## What the simulator demonstrates
 
 - Process states: `NEW`, `READY`, `RUNNING`, `WAITING_MEMORY`, `WAITING_RESOURCE`, `TERMINATED`
 - Scheduling policies:
   - `FCFS`
   - `RR` with configurable quantum
-  - `PRIORITY` (non-preemptive)
-- Fixed-size contiguous memory with first-fit allocation
-- A shared `PRINTER` resource with capacity 1
-- Timestamped logs that prove scheduling, blocking, allocation, release, and termination
+  - `PRIORITY` where the lower number has higher priority
+- Fixed-size contiguous memory using first-fit allocation
+- Memory blocking when a job cannot be admitted because memory is unavailable
+- Two shared resources:
+  - `PRINTER` with capacity 1
+  - `DISK` with capacity 1
+- Resource blocking when a process requests a busy shared resource
+- FIFO waiting behavior for resource queues
+- Logs showing scheduling decisions, state transitions, resource acquisition, resource release, memory allocation, memory release, and termination
 
 ## Default design choices
 
-These defaults were chosen to satisfy the rubric with the least ambiguity:
-
 - Total memory: `1024`
-- Extra resource: `PRINTER` with capacity `1`
-- RR quantum: `2`
-- Third scheduler: `PRIORITY` (non-preemptive, lower number = higher priority)
+- Main shared resource: `PRINTER`
+- Additional shared resource: `DISK`
+- Resource capacity: one process at a time for each resource
+- RR quantum: `2` by default
+- Third scheduler: `PRIORITY`, non-preemptive, lower number = higher priority
 - Memory policy: first-fit contiguous allocation with merge-on-free
-- Waiting discipline for shared resource: FIFO
+- Synchronization/control rule: a process can only acquire a shared resource if the resource has available capacity. If the resource is busy, the process moves to `WAITING_RESOURCE` and waits in a FIFO queue until the resource is released.
 
 ## Build
 
@@ -30,15 +37,20 @@ make
 
 ## Run
 
-```bash
-./os_sim --policy RR --quantum 2 --memory 1024 --jobs jobs.txt
-```
-
-Other examples:
+Recommended commands:
 
 ```bash
 ./os_sim --policy FCFS --jobs jobs.txt
+./os_sim --policy RR --quantum 2 --memory 1024 --jobs jobs.txt
 ./os_sim --policy PRIORITY --jobs jobs.txt
+```
+
+The program also supports the simpler positional format:
+
+```bash
+./os_sim jobs.txt FCFS
+./os_sim jobs.txt RR 2
+./os_sim jobs.txt PRIORITY
 ```
 
 ## Jobs file format
@@ -49,87 +61,84 @@ Each non-comment line in `jobs.txt` uses this format:
 pid arrival burst memory priority [RESOURCE@requestTick:holdDuration ...]
 ```
 
-Example:
+For example:
 
 ```text
-1 0 5 200 2 PRINTER@2:2
+1 0 7 200 2 PRINTER@2:4
 ```
 
 This means:
-- process id = 1
-- arrives at time 0
-- needs 5 CPU ticks total
-- needs 200 memory units
-- priority = 2
-- requests the printer after it has executed 2 CPU ticks
-- holds the printer for 2 ticks
 
-## Expected demonstration outcomes
+- Process ID is `1`
+- Arrival time is `0`
+- CPU burst time is `7`
+- Memory requirement is `200`
+- Priority is `2`
+- The process requests the `PRINTER` after it has executed 2 CPU ticks
+- The process holds the `PRINTER` for 4 ticks
 
-The default `jobs.txt` was chosen to make the simulator visibly demonstrate:
+## Default demo scenario
 
-- memory blocking due to insufficient contiguous memory
-- printer blocking due to capacity 1
-- scheduler selections under all three policies
-- state transitions and release of resources/memory
+The included `jobs.txt` creates 5 processes. It is designed to show:
 
-## General Explanation
+- At least 5 jobs/processes
+- Memory allocation and memory blocking
+- Printer acquisition, printer blocking, and printer release during Round Robin
+- A second resource, `DISK`, being acquired and released
+- Visible scheduler decisions under FCFS, RR, and PRIORITY
+- State summaries at every CPU tick
 
-> At each time step, the program checks for any new jobs and tries to give them memory. If there’s enough memory, the job moves to READY; otherwise it stays in a WAITING state. The scheduler then picks a job from the READY queue and sets it to RUNNING. While running, the job uses CPU time and may request a resource like the printer. If the printer is busy, the job is moved to WAITING until it becomes available again. When a job finishes, it goes to TERMINATED and releases its memory and any resources it was using. Throughout the whole process, the program logs state changes, scheduling decisions, and resource usage.
-
-## Mermaid architecture diagram
+## Architecture
 
 ```mermaid
 flowchart TD
-  A([Start simulation<br/>main.cpp]) --> B["Load jobs into PCBs<br/>SimulationEngine.cpp"]
-  B --> C["Initialize scheduler, memory, resources<br/>SimulationEngine.cpp"]
-  C --> D["Advance simulation clock<br/>SimulationEngine.cpp"]
+  A([Start program<br/>main.cpp]) --> B[Load jobs from jobs.txt<br/>main.cpp]
+  B --> C[Create Simulator<br/>Simulator.cpp]
+  C --> D[Global time loop<br/>Simulator.cpp]
 
-  D --> E["Admit new jobs (arrival_time == t)<br/>SimulationEngine.cpp"]
-  E --> F["Attempt memory allocation<br/>MemoryManager.cpp"]
+  D --> E[Admit new arrivals<br/>Simulator.cpp]
+  E --> F[Check memory availability<br/>MemoryManager.cpp]
+  F --> G{Enough memory?}
+  G -- Yes --> H[Allocate memory first-fit<br/>MemoryManager.cpp]
+  H --> I[Move process to READY queue<br/>Simulator.cpp]
+  G -- No --> J[Move process to WAITING_MEMORY<br/>Simulator.cpp]
 
-  F --> G{"Enough memory available?<br/>MemoryManager.cpp"}
-  G -- Yes --> H["Allocate (first-fit)<br/>MemoryManager.cpp"]
-  H --> I["Move to READY queue<br/>Scheduler.cpp"]
-
-  G -- No --> J["Set state = WAITING_MEMORY<br/>Process.cpp"]
-
-  I --> K{"More jobs to process?<br/>SimulationEngine.cpp"}
+  I --> K[Handle resource release timers<br/>Simulator.cpp]
   J --> K
-  K -- Yes --> F
-  K -- No --> L{"CPU idle or preemption?<br/>Scheduler.cpp"}
+  K --> L{CPU needs process?}
+  L -- Yes --> M[Select process using FCFS/RR/PRIORITY<br/>Scheduler.cpp]
+  M --> N[Set selected process to RUNNING<br/>Simulator.cpp]
+  L -- No --> O[Continue current process<br/>Simulator.cpp]
 
-  L -- Yes --> M["Select next job (FCFS/RR/Priority)<br/>Scheduler.cpp"]
-  M --> N{"Job found?<br/>Scheduler.cpp"}
-  N -- No --> D
-  N -- Yes --> O["Set state = RUNNING<br/>Process.cpp"]
+  N --> P[Execute one CPU tick<br/>Simulator.cpp]
+  O --> P
+  P --> Q{Resource request due?}
+  Q -- No --> R[Check quantum or termination<br/>Simulator.cpp]
+  Q -- Yes --> S[Request PRINTER or DISK<br/>ResourceManager.cpp]
+  S --> T{Resource available?}
+  T -- Yes --> U[Grant resource<br/>ResourceManager.cpp]
+  T -- No --> V[Move process to WAITING_RESOURCE<br/>Simulator.cpp]
 
-  L -- No --> P["Continue running job<br/>SimulationEngine.cpp"]
-  O --> Q["Execute 1 CPU tick<br/>SimulationEngine.cpp"]
-  P --> Q
-
-  Q --> R{"Needs printer now?<br/>Process.cpp"}
-  R -- Yes --> S["Request resource<br/>ResourceManager.cpp"]
-  R -- No --> T["Continue execution<br/>SimulationEngine.cpp"]
-
-  S --> U{"Printer available?<br/>ResourceManager.cpp"}
-  U -- Yes --> V["Grant printer<br/>ResourceManager.cpp"]
-  U -- No --> W["Set WAITING_RESOURCE<br/>Process.cpp"]
-
-  V --> X{"Job finished?<br/>Process.cpp"}
-  T --> X
+  U --> R
+  V --> W[Print state summary<br/>Simulator.cpp]
+  R --> X{Process finished?}
+  X -- Yes --> Y[Release owned resource and memory<br/>Simulator.cpp + MemoryManager.cpp]
+  Y --> Z[Set state to TERMINATED<br/>Simulator.cpp]
+  X -- No --> AA{RR quantum expired?}
+  AA -- Yes --> AB[Move process back to READY<br/>Simulator.cpp]
+  AA -- No --> W
+  Z --> W
+  AB --> W
   W --> D
-
-  X -- Yes --> Y["Release resources<br/>ResourceManager.cpp"]
-  Y --> Z["Free memory<br/>MemoryManager.cpp"]
-  Z --> ZA["Set TERMINATED<br/>Process.cpp"]
-  ZA --> ZB["Wake waiting jobs<br/>SimulationEngine.cpp"]
-  ZB --> D
-
-  X -- No --> ZC{"Preemption needed?<br/>Scheduler.cpp"}
-  ZC -- Yes --> ZD["Move to READY<br/>Scheduler.cpp"]
-  ZC -- No --> ZE["Keep RUNNING<br/>SimulationEngine.cpp"]
-
-  ZD --> D
-  ZE --> D
 ```
+
+## How this matches the final checklist
+
+- Program runs from a clean compile: use `make`
+- At least 5 jobs/processes are created: `jobs.txt` contains 5 jobs
+- At least 2 shared resources exist: `PRINTER` and `DISK`
+- Scheduling decisions are visible: logs say `Scheduler selected PID ... using policy ...`
+- At least one waiting/blocking event occurs: memory blocking and printer blocking are logged
+- Resources are released correctly: logs show `released PRINTER` and `released DISK`
+- Output format is readable and structured: each CPU tick has a header and state summary
+- Architecture diagram matches implementation: diagram names the actual files used in this project

@@ -25,5 +25,6 @@ public:
 };
 
 Policy parsePolicy(const std::string& policyStr);
+std::string policyToString(Policy policy);
 
 #endif

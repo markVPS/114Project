@@ -23,7 +23,7 @@ private:
 
     PCB* runningProcess = nullptr;
     int currentQuantumUsed = 0;
-     bool dispatchedThisTick = false;
+    bool dispatchedThisTick = false;
 
 public:
     Simulator(const std::vector<PCB>& jobs, Policy policy, int quantum, int totalMemory);
@@ -35,7 +35,10 @@ private:
     void dispatchIfNeeded();
     void executeOneTick();
     void handleResourceReleases();
+    void grantWaitingResource(const std::string& resourceName);
+    void releaseOwnedResource(PCB* job, const std::string& reason);
     void checkTerminations();
+    void printStateSummary() const;
     bool allFinished() const;
     void log(const std::string& message);
 };

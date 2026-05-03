@@ -2,16 +2,20 @@
 #include "../include/PCB.h"
 #include "../include/Scheduler.h"
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <sstream>
+#include <stdexcept>
 #include <vector>
 
-
-//includes process parameters and resource requests
-std::vector<PCB> loadJobs(const std::string& filename) { //loads job definitions from a file
+std::vector<PCB> loadJobs(const std::string& filename) {
     std::vector<PCB> jobs;
     std::ifstream file(filename);
+
+    if (!file.is_open()) {
+        throw std::runtime_error("Could not open jobs file: " + filename);
+    }
+
     std::string line;
 
     while (std::getline(file, line)) {
@@ -20,7 +24,9 @@ std::vector<PCB> loadJobs(const std::string& filename) { //loads job definitions
         std::stringstream ss(line);
 
         int pid, arrival, burst, memory, priority;
-        ss >> pid >> arrival >> burst >> memory >> priority;
+        if (!(ss >> pid >> arrival >> burst >> memory >> priority)) {
+            throw std::runtime_error("Invalid job line: " + line);
+        }
 
         PCB pcb(pid, arrival, burst, memory, priority);
 
@@ -50,21 +56,41 @@ int main(int argc, char* argv[]) {
     int memory = 1024;
     std::string jobsFile = "jobs.txt";
 
-    for (int i = 1; i < argc; i++) {
-        std::string arg = argv[i];
+    try {
+        for (int i = 1; i < argc; i++) {
+            std::string arg = argv[i];
 
-        if (arg == "--policy") policyStr = argv[++i];
-        else if (arg == "--quantum") quantum = std::stoi(argv[++i]);
-        else if (arg == "--memory") memory = std::stoi(argv[++i]);
-        else if (arg == "--jobs") jobsFile = argv[++i];
+            if (arg == "--policy" && i + 1 < argc) {
+                policyStr = argv[++i];
+            } else if (arg == "--quantum" && i + 1 < argc) {
+                quantum = std::stoi(argv[++i]);
+            } else if (arg == "--memory" && i + 1 < argc) {
+                memory = std::stoi(argv[++i]);
+            } else if (arg == "--jobs" && i + 1 < argc) {
+                jobsFile = argv[++i];
+            } else if (i == 1 && arg.find("--") != 0) {
+                jobsFile = arg;
+            } else if (i == 2 && arg.find("--") != 0) {
+                policyStr = arg;
+            } else if (i == 3 && arg.find("--") != 0) {
+                quantum = std::stoi(arg);
+            } else {
+                throw std::runtime_error("Invalid command-line argument: " + arg);
+            }
+        }
+
+        Policy policy = parsePolicy(policyStr);
+        std::vector<PCB> jobs = loadJobs(jobsFile);
+
+        Simulator sim(jobs, policy, quantum, memory);
+        sim.run();
+    } catch (const std::exception& ex) {
+        std::cerr << "Error: " << ex.what() << std::endl;
+        std::cerr << "Usage examples:" << std::endl;
+        std::cerr << "  ./os_sim --policy RR --quantum 2 --memory 1024 --jobs jobs.txt" << std::endl;
+        std::cerr << "  ./os_sim jobs.txt PRIORITY" << std::endl;
+        return 1;
     }
-//loads jobs form the file and starts the simulator
-    Policy policy = parsePolicy(policyStr);
-
-    std::vector<PCB> jobs = loadJobs(jobsFile);
-
-    Simulator sim(jobs, policy, quantum, memory);
-    sim.run();
 
     return 0;
 }

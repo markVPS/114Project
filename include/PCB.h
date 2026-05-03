@@ -35,8 +35,8 @@ struct PCB {
     int memoryStart = -1;
     int memorySize = 0;
 
-    bool ownsPrinter = false;
-    int printerRemainingHold = 0;
+    std::string ownedResource = "";
+    int resourceRemainingHold = 0;
 
     std::vector<ResourceRequest> requests;
 

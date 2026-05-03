@@ -3,6 +3,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 class ResourceManager {
 private:
@@ -15,6 +16,8 @@ public:
     bool requestResource(const std::string& name);
     void releaseResource(const std::string& name);
     int available(const std::string& name) const;
+    bool exists(const std::string& name) const;
+    std::vector<std::string> getResourceNames() const;
 };
 
 #endif

@@ -1,0 +1,358 @@
+
+==============================
+REAL TIME: 1.25e-07 seconds
+SIMULATION TICK: 0
+==============================
+[t=0] PID 1 admitted, memory allocated at 0, state=READY
+STATE SUMMARY: PID 1=READY PID 2=NEW PID 3=NEW PID 4=NEW PID 5=NEW 
+
+==============================
+REAL TIME: 7.7583e-05 seconds
+SIMULATION TICK: 1
+==============================
+[t=1] PID 2 admitted, memory allocated at 200, state=READY
+STATE SUMMARY: PID 1=READY PID 2=READY PID 3=NEW PID 4=NEW PID 5=NEW 
+
+==============================
+REAL TIME: 9.3083e-05 seconds
+SIMULATION TICK: 2
+==============================
+[t=2] PID 3 admitted, memory allocated at 500, state=READY
+STATE SUMMARY: PID 1=READY PID 2=READY PID 3=READY PID 4=NEW PID 5=NEW 
+
+==============================
+REAL TIME: 0.000107083 seconds
+SIMULATION TICK: 3
+==============================
+[t=3] PID 4 blocked for memory, state=WAITING_MEMORY
+STATE SUMMARY: PID 1=READY PID 2=READY PID 3=READY PID 4=WAITING_MEMORY PID 5=NEW 
+
+==============================
+REAL TIME: 0.000126542 seconds
+SIMULATION TICK: 4
+==============================
+[t=4] PID 5 blocked for memory, state=WAITING_MEMORY
+STATE SUMMARY: PID 1=READY PID 2=READY PID 3=READY PID 4=WAITING_MEMORY PID 5=WAITING_MEMORY 
+
+==============================
+REAL TIME: 0.000140042 seconds
+SIMULATION TICK: 5
+==============================
+[t=5] Scheduler selected PID 2 using policy PRIORITY, state=RUNNING
+STATE SUMMARY: PID 1=READY PID 2=RUNNING PID 3=READY PID 4=WAITING_MEMORY PID 5=WAITING_MEMORY 
+
+==============================
+REAL TIME: 0.000154958 seconds
+SIMULATION TICK: 6
+==============================
+[t=6] PID 2 executed one CPU tick, remaining=5
+STATE SUMMARY: PID 1=READY PID 2=RUNNING PID 3=READY PID 4=WAITING_MEMORY PID 5=WAITING_MEMORY 
+
+==============================
+REAL TIME: 0.000168542 seconds
+SIMULATION TICK: 7
+==============================
+[t=7] PID 2 acquired PRINTER for 3 tick(s)
+STATE SUMMARY: PID 1=READY PID 2=RUNNING(PRINTER:3 ticks left) PID 3=READY PID 4=WAITING_MEMORY PID 5=WAITING_MEMORY 
+
+==============================
+REAL TIME: 0.000183542 seconds
+SIMULATION TICK: 8
+==============================
+[t=8] PID 2 executed one CPU tick, remaining=4
+STATE SUMMARY: PID 1=READY PID 2=RUNNING(PRINTER:2 ticks left) PID 3=READY PID 4=WAITING_MEMORY PID 5=WAITING_MEMORY 
+
+==============================
+REAL TIME: 0.000197458 seconds
+SIMULATION TICK: 9
+==============================
+[t=9] PID 2 executed one CPU tick, remaining=3
+STATE SUMMARY: PID 1=READY PID 2=RUNNING(PRINTER:1 ticks left) PID 3=READY PID 4=WAITING_MEMORY PID 5=WAITING_MEMORY 
+
+==============================
+REAL TIME: 0.000211042 seconds
+SIMULATION TICK: 10
+==============================
+[t=10] PID 2 released PRINTER
+STATE SUMMARY: PID 1=READY PID 2=RUNNING PID 3=READY PID 4=WAITING_MEMORY PID 5=WAITING_MEMORY 
+
+==============================
+REAL TIME: 0.000226083 seconds
+SIMULATION TICK: 11
+==============================
+[t=11] PID 2 executed one CPU tick, remaining=2
+STATE SUMMARY: PID 1=READY PID 2=RUNNING PID 3=READY PID 4=WAITING_MEMORY PID 5=WAITING_MEMORY 
+
+==============================
+REAL TIME: 0.000248208 seconds
+SIMULATION TICK: 12
+==============================
+[t=12] PID 2 executed one CPU tick, remaining=1
+STATE SUMMARY: PID 1=READY PID 2=RUNNING PID 3=READY PID 4=WAITING_MEMORY PID 5=WAITING_MEMORY 
+
+==============================
+REAL TIME: 0.000264042 seconds
+SIMULATION TICK: 13
+==============================
+[t=13] PID 2 executed one CPU tick, remaining=0
+STATE SUMMARY: PID 1=READY PID 2=RUNNING PID 3=READY PID 4=WAITING_MEMORY PID 5=WAITING_MEMORY 
+
+==============================
+REAL TIME: 0.000280125 seconds
+SIMULATION TICK: 14
+==============================
+[t=14] PID 2 terminated, memory freed, state=TERMINATED
+STATE SUMMARY: PID 1=READY PID 2=TERMINATED PID 3=READY PID 4=WAITING_MEMORY PID 5=WAITING_MEMORY 
+
+==============================
+REAL TIME: 0.000294792 seconds
+SIMULATION TICK: 15
+==============================
+[t=15] PID 4 memory allocated at 200, state=READY
+STATE SUMMARY: PID 1=READY PID 2=TERMINATED PID 3=READY PID 4=READY PID 5=WAITING_MEMORY 
+
+==============================
+REAL TIME: 0.000324958 seconds
+SIMULATION TICK: 16
+==============================
+[t=16] Scheduler selected PID 1 using policy PRIORITY, state=RUNNING
+STATE SUMMARY: PID 1=RUNNING PID 2=TERMINATED PID 3=READY PID 4=READY PID 5=WAITING_MEMORY 
+
+==============================
+REAL TIME: 0.00034 seconds
+SIMULATION TICK: 17
+==============================
+[t=17] PID 1 executed one CPU tick, remaining=6
+STATE SUMMARY: PID 1=RUNNING PID 2=TERMINATED PID 3=READY PID 4=READY PID 5=WAITING_MEMORY 
+
+==============================
+REAL TIME: 0.000352917 seconds
+SIMULATION TICK: 18
+==============================
+[t=18] PID 1 executed one CPU tick, remaining=5
+STATE SUMMARY: PID 1=RUNNING PID 2=TERMINATED PID 3=READY PID 4=READY PID 5=WAITING_MEMORY 
+
+==============================
+REAL TIME: 0.000365708 seconds
+SIMULATION TICK: 19
+==============================
+[t=19] PID 1 acquired PRINTER for 10 tick(s)
+STATE SUMMARY: PID 1=RUNNING(PRINTER:10 ticks left) PID 2=TERMINATED PID 3=READY PID 4=READY PID 5=WAITING_MEMORY 
+
+==============================
+REAL TIME: 0.000379792 seconds
+SIMULATION TICK: 20
+==============================
+[t=20] PID 1 executed one CPU tick, remaining=4
+STATE SUMMARY: PID 1=RUNNING(PRINTER:9 ticks left) PID 2=TERMINATED PID 3=READY PID 4=READY PID 5=WAITING_MEMORY 
+
+==============================
+REAL TIME: 0.000394833 seconds
+SIMULATION TICK: 21
+==============================
+[t=21] PID 1 executed one CPU tick, remaining=3
+STATE SUMMARY: PID 1=RUNNING(PRINTER:8 ticks left) PID 2=TERMINATED PID 3=READY PID 4=READY PID 5=WAITING_MEMORY 
+
+==============================
+REAL TIME: 0.000408 seconds
+SIMULATION TICK: 22
+==============================
+[t=22] PID 1 executed one CPU tick, remaining=2
+STATE SUMMARY: PID 1=RUNNING(PRINTER:7 ticks left) PID 2=TERMINATED PID 3=READY PID 4=READY PID 5=WAITING_MEMORY 
+
+==============================
+REAL TIME: 0.000421125 seconds
+SIMULATION TICK: 23
+==============================
+[t=23] PID 1 executed one CPU tick, remaining=1
+STATE SUMMARY: PID 1=RUNNING(PRINTER:6 ticks left) PID 2=TERMINATED PID 3=READY PID 4=READY PID 5=WAITING_MEMORY 
+
+==============================
+REAL TIME: 0.000434042 seconds
+SIMULATION TICK: 24
+==============================
+[t=24] PID 1 executed one CPU tick, remaining=0
+STATE SUMMARY: PID 1=RUNNING(PRINTER:5 ticks left) PID 2=TERMINATED PID 3=READY PID 4=READY PID 5=WAITING_MEMORY 
+
+==============================
+REAL TIME: 0.000446917 seconds
+SIMULATION TICK: 25
+==============================
+[t=25] PID 1 terminated, memory freed, released PRINTER, state=TERMINATED
+STATE SUMMARY: PID 1=TERMINATED PID 2=TERMINATED PID 3=READY PID 4=READY PID 5=WAITING_MEMORY 
+
+==============================
+REAL TIME: 0.00046075 seconds
+SIMULATION TICK: 26
+==============================
+[t=26] Scheduler selected PID 3 using policy PRIORITY, state=RUNNING
+STATE SUMMARY: PID 1=TERMINATED PID 2=TERMINATED PID 3=RUNNING PID 4=READY PID 5=WAITING_MEMORY 
+
+==============================
+REAL TIME: 0.000475667 seconds
+SIMULATION TICK: 27
+==============================
+[t=27] PID 3 executed one CPU tick, remaining=5
+STATE SUMMARY: PID 1=TERMINATED PID 2=TERMINATED PID 3=RUNNING PID 4=READY PID 5=WAITING_MEMORY 
+
+==============================
+REAL TIME: 0.000488708 seconds
+SIMULATION TICK: 28
+==============================
+[t=28] PID 3 executed one CPU tick, remaining=4
+STATE SUMMARY: PID 1=TERMINATED PID 2=TERMINATED PID 3=RUNNING PID 4=READY PID 5=WAITING_MEMORY 
+
+==============================
+REAL TIME: 0.000501417 seconds
+SIMULATION TICK: 29
+==============================
+[t=29] PID 3 executed one CPU tick, remaining=3
+STATE SUMMARY: PID 1=TERMINATED PID 2=TERMINATED PID 3=RUNNING PID 4=READY PID 5=WAITING_MEMORY 
+
+==============================
+REAL TIME: 0.000514042 seconds
+SIMULATION TICK: 30
+==============================
+[t=30] PID 3 executed one CPU tick, remaining=2
+STATE SUMMARY: PID 1=TERMINATED PID 2=TERMINATED PID 3=RUNNING PID 4=READY PID 5=WAITING_MEMORY 
+
+==============================
+REAL TIME: 0.00052675 seconds
+SIMULATION TICK: 31
+==============================
+[t=31] PID 3 executed one CPU tick, remaining=1
+STATE SUMMARY: PID 1=TERMINATED PID 2=TERMINATED PID 3=RUNNING PID 4=READY PID 5=WAITING_MEMORY 
+
+==============================
+REAL TIME: 0.000553375 seconds
+SIMULATION TICK: 32
+==============================
+[t=32] PID 3 executed one CPU tick, remaining=0
+STATE SUMMARY: PID 1=TERMINATED PID 2=TERMINATED PID 3=RUNNING PID 4=READY PID 5=WAITING_MEMORY 
+
+==============================
+REAL TIME: 0.000566167 seconds
+SIMULATION TICK: 33
+==============================
+[t=33] PID 3 terminated, memory freed, state=TERMINATED
+STATE SUMMARY: PID 1=TERMINATED PID 2=TERMINATED PID 3=TERMINATED PID 4=READY PID 5=WAITING_MEMORY 
+
+==============================
+REAL TIME: 0.000579667 seconds
+SIMULATION TICK: 34
+==============================
+[t=34] PID 5 memory allocated at 500, state=READY
+STATE SUMMARY: PID 1=TERMINATED PID 2=TERMINATED PID 3=TERMINATED PID 4=READY PID 5=READY 
+
+==============================
+REAL TIME: 0.000592667 seconds
+SIMULATION TICK: 35
+==============================
+[t=35] Scheduler selected PID 5 using policy PRIORITY, state=RUNNING
+STATE SUMMARY: PID 1=TERMINATED PID 2=TERMINATED PID 3=TERMINATED PID 4=READY PID 5=RUNNING 
+
+==============================
+REAL TIME: 0.000606542 seconds
+SIMULATION TICK: 36
+==============================
+[t=36] PID 5 executed one CPU tick, remaining=4
+STATE SUMMARY: PID 1=TERMINATED PID 2=TERMINATED PID 3=TERMINATED PID 4=READY PID 5=RUNNING 
+
+==============================
+REAL TIME: 0.000621375 seconds
+SIMULATION TICK: 37
+==============================
+[t=37] PID 5 executed one CPU tick, remaining=3
+STATE SUMMARY: PID 1=TERMINATED PID 2=TERMINATED PID 3=TERMINATED PID 4=READY PID 5=RUNNING 
+
+==============================
+REAL TIME: 0.000636625 seconds
+SIMULATION TICK: 38
+==============================
+[t=38] PID 5 executed one CPU tick, remaining=2
+STATE SUMMARY: PID 1=TERMINATED PID 2=TERMINATED PID 3=TERMINATED PID 4=READY PID 5=RUNNING 
+
+==============================
+REAL TIME: 0.000651208 seconds
+SIMULATION TICK: 39
+==============================
+[t=39] PID 5 executed one CPU tick, remaining=1
+STATE SUMMARY: PID 1=TERMINATED PID 2=TERMINATED PID 3=TERMINATED PID 4=READY PID 5=RUNNING 
+
+==============================
+REAL TIME: 0.000666667 seconds
+SIMULATION TICK: 40
+==============================
+[t=40] PID 5 executed one CPU tick, remaining=0
+STATE SUMMARY: PID 1=TERMINATED PID 2=TERMINATED PID 3=TERMINATED PID 4=READY PID 5=RUNNING 
+
+==============================
+REAL TIME: 0.000679833 seconds
+SIMULATION TICK: 41
+==============================
+[t=41] PID 5 terminated, memory freed, state=TERMINATED
+STATE SUMMARY: PID 1=TERMINATED PID 2=TERMINATED PID 3=TERMINATED PID 4=READY PID 5=TERMINATED 
+
+==============================
+REAL TIME: 0.000692583 seconds
+SIMULATION TICK: 42
+==============================
+[t=42] Scheduler selected PID 4 using policy PRIORITY, state=RUNNING
+STATE SUMMARY: PID 1=TERMINATED PID 2=TERMINATED PID 3=TERMINATED PID 4=RUNNING PID 5=TERMINATED 
+
+==============================
+REAL TIME: 0.000705708 seconds
+SIMULATION TICK: 43
+==============================
+[t=43] PID 4 executed one CPU tick, remaining=4
+STATE SUMMARY: PID 1=TERMINATED PID 2=TERMINATED PID 3=TERMINATED PID 4=RUNNING PID 5=TERMINATED 
+
+==============================
+REAL TIME: 0.000718417 seconds
+SIMULATION TICK: 44
+==============================
+[t=44] PID 4 acquired DISK for 2 tick(s)
+STATE SUMMARY: PID 1=TERMINATED PID 2=TERMINATED PID 3=TERMINATED PID 4=RUNNING(DISK:2 ticks left) PID 5=TERMINATED 
+
+==============================
+REAL TIME: 0.000732125 seconds
+SIMULATION TICK: 45
+==============================
+[t=45] PID 4 executed one CPU tick, remaining=3
+STATE SUMMARY: PID 1=TERMINATED PID 2=TERMINATED PID 3=TERMINATED PID 4=RUNNING(DISK:1 ticks left) PID 5=TERMINATED 
+
+==============================
+REAL TIME: 0.000745083 seconds
+SIMULATION TICK: 46
+==============================
+[t=46] PID 4 released DISK
+STATE SUMMARY: PID 1=TERMINATED PID 2=TERMINATED PID 3=TERMINATED PID 4=RUNNING PID 5=TERMINATED 
+
+==============================
+REAL TIME: 0.000770792 seconds
+SIMULATION TICK: 47
+==============================
+[t=47] PID 4 executed one CPU tick, remaining=2
+STATE SUMMARY: PID 1=TERMINATED PID 2=TERMINATED PID 3=TERMINATED PID 4=RUNNING PID 5=TERMINATED 
+
+==============================
+REAL TIME: 0.000784 seconds
+SIMULATION TICK: 48
+==============================
+[t=48] PID 4 executed one CPU tick, remaining=1
+STATE SUMMARY: PID 1=TERMINATED PID 2=TERMINATED PID 3=TERMINATED PID 4=RUNNING PID 5=TERMINATED 
+
+==============================
+REAL TIME: 0.000796708 seconds
+SIMULATION TICK: 49
+==============================
+[t=49] PID 4 executed one CPU tick, remaining=0
+STATE SUMMARY: PID 1=TERMINATED PID 2=TERMINATED PID 3=TERMINATED PID 4=RUNNING PID 5=TERMINATED 
+
+==============================
+REAL TIME: 0.000809375 seconds
+SIMULATION TICK: 50
+==============================
+[t=50] PID 4 terminated, memory freed, state=TERMINATED
+STATE SUMMARY: PID 1=TERMINATED PID 2=TERMINATED PID 3=TERMINATED PID 4=TERMINATED PID 5=TERMINATED 
+[t=51] Simulation complete
