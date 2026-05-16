@@ -146,3 +146,6 @@ flowchart TD
 - Resources are released correctly: logs show `released PRINTER` and `released DISK`
 - Output format is readable and structured: each CPU tick has a header and state summary
 - Architecture diagram matches implementation: diagram names the actual files used in this project
+
+## Known limitations
+Does not include advanced OS features such as interrupts, system calls, file systems, networking, security, or true parallel execution.
