@@ -2,6 +2,10 @@
 
 This project is a user-space MiniOS simulator for CSCI 114. The topic is a printer/resource simulation. It demonstrates process states, CPU scheduling, memory blocking, shared resource blocking, synchronization rules, and structured event logs.
 
+## Team Members
+
+- Your Name
+- Partner Name (if applicable)
 ## What the simulator demonstrates
 
 - Process states: `NEW`, `READY`, `RUNNING`, `WAITING_MEMORY`, `WAITING_RESOURCE`, `TERMINATED`
